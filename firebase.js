@@ -8,6 +8,14 @@ const firebaseConfig = {
     messagingSenderId: "1033249039980",
     appId: "1:1033249039980:web:c96c04e8db3f1e6d72da49"
   };
-const app = initializeApp(firebaseConfig);
-const firestore = getFirestore(app);
-export { firestore };
+// const app = initializeApp(firebaseConfig);
+// const firestore = getFirestore(app);
+// export { firestore };
+let firestore = null;
+
+if (typeof window !== "undefined") {
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  firestore = getFirestore(app);
+}
+export{firestore};
