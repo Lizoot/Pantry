@@ -26,7 +26,7 @@ const style = {
   display: 'flex',
   flexDirection: 'column',
   gap: 3,
-}
+} //testcomment just WORK. get it on github.
 
 export default function Home() {
   // We'll add our component logic here
