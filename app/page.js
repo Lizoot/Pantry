@@ -11,8 +11,16 @@ import {
   setDoc,
   deleteDoc,
   getDoc,
+  addDoc,
+  updateDoc,
+  serverTimestamp
 } from 'firebase/firestore'
 
+import { Container, List, ListItem, ListItemText, IconButton, Paper, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
+//import DeleteIcon from '@mui/icons-material/Delete';
+//import AddIcon from '@mui/icons-material/Add';
+//import RemoveIcon from '@mui/icons-material/Remove';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -33,8 +41,8 @@ export default function Home() {
 const [inventory, setInventory] = useState([])
 const [open, setOpen] = useState(false)
 const [itemName, setItemName] = useState('')
-
-
+const [searchTerm, setSearchTerm] = useState('')
+const [filteredInventory, setFilteredInventory] = useState([])
 
 const updateInventory = async () => {
     const snapshot = query(collection(firestore, 'inventory'))
@@ -79,6 +87,17 @@ const updateInventory = async () => {
 const handleOpen = () => setOpen(true)
 const handleClose = () => setOpen(false)
 
+const handleSearch = (event) => {
+  setSearchTerm(event.target.value);
+  if (event.target.value === '') {
+    setFilteredInventory(inventory);
+  } else {
+    const filtered = inventory.filter(item =>
+      item.name.toLowerCase().includes(event.target.value.toLowerCase())
+    );
+    setFilteredInventory(filtered);
+  }
+};
 
 
 
@@ -132,6 +151,20 @@ return (
       <Button variant="contained" onClick={handleOpen}>
         Add New Item
       </Button>
+      <TextField
+    id="search-bar"
+    label="Search Ingredients"
+    variant="outlined"
+    value={searchTerm}
+    onChange={handleSearch}
+    sx={{
+      mb: 2,
+      bgcolor: 'background.paper',
+      width: '80%',
+      borderRadius: 1,
+      input: { borderRadius: 1 },
+    }}
+    />
       <Box border={'1px solid #333'}>
         <Box
           width="800px"
@@ -146,7 +179,7 @@ return (
           </Typography>
         </Box>
         <Stack width="800px" height="300px" spacing={2} overflow={'auto'}>
-          {inventory.map(({name, quantity}) => (
+          {filteredInventory.map(({name, quantity}) => (
             <Box
               key={name}
               width="100%"
@@ -173,4 +206,6 @@ return (
     </Box>
   )
 }
+
+
 
